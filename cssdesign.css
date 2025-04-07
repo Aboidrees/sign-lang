@@ -263,7 +263,8 @@ footer a:hover {
   }
 
   .sign-language-chart {
-    max-width: 300px;
+    width: 100%;
+    height: auto;
   }
 }
 
