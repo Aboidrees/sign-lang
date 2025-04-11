@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "path": "hand"
+    },
+    {
+      "path": "server"
+    },
+    {
+      "path": "webpage"
+    },
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "webpage"
+  }
+}

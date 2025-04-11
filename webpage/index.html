@@ -36,11 +36,11 @@
   </div>
 
   <!-- Image Upload Section -->
-  <section id="upload-container">
-    <h2>Image Upload</h2>
-    <input type="file" id="imageUpload" accept="image/*" class="btn">
-    <img id="uploadedImage" src="#" alt="Uploaded Image Preview" class="hidden">
-    <button id="predict-upload" class="btn" onclick="predictFromUpload()">enter</button>
+  <section id="send-letter-container">
+    <h2>Send Letter</h2>
+    <input type="text" onkeyup="sendLetter(event)" id="letter" class="btn">
+    <!-- loading, sent, error -->
+    <span id="status"></span>
   </section>
 
   <!-- Progress Bar Section -->
@@ -193,49 +193,25 @@
       startBtn.textContent = "Start Detector";
     }
 
-    async function predictFromUpload() {
-      const input = document.getElementById("imageUpload");
-      const uploadedImage = document.getElementById("uploadedImage");
-      const progressBar = document.getElementById("progress-bar");
-      const progressText = document.getElementById("progress-text");
-      const predictionResults = document.getElementById("prediction-results");
+    function sendLetter(event) {
+      const status = document.getElementById("status");
+      status.textContent = "Sending...";
+      const letter = event.target.value;
 
-      if (input.files && input.files[0]) {
-        const file = input.files[0];
-        const reader = new FileReader();
-
-        document.getElementById("progress-container").style.display = "block";
-        progressBar.style.width = "0%";
-        progressText.textContent = "Loading image...";
-        predictionResults.innerHTML = "";
-
-        reader.onload = (e) => {
-          uploadedImage.src = e.target.result;
-          uploadedImage.classList.remove("hidden");
-
-          const img = new Image();
-          img.src = e.target.result;
-          img.onload = async () => {
-            progressBar.style.width = "60%";
-            progressText.textContent = "Image loaded. Predicting...";
-
-            const prediction = await model.predict(img);
-            progressBar.style.width = "100%";
-            progressText.textContent = "Prediction complete!";
-
-            prediction.forEach((pred) => {
-              const result = document.createElement("div");
-              result.innerHTML = `<strong>${pred.className}:</strong> ${(
-                pred.probability * 100
-              ).toFixed(2)}%`;
-              predictionResults.appendChild(result);
-            });
-          };
-        };
-
-        reader.readAsDataURL(file);
-      }
+      fetch(`http://localhost:3000/send?letter=${letter}`)
+        .then(data => {
+          status.textContent = "sent";
+        })
+        .catch(error => {
+          console.error("Error sending letter:", error);
+          status.textContent = "Error sending letter";
+        }).finally(() => {
+          // clear the input
+          event.target.value = "";
+        });
     }
+
+
   </script>
 </body>
 
