@@ -38,7 +38,8 @@
   <!-- Image Upload Section -->
   <section id="send-letter-container">
     <h2>Send Letter</h2>
-    <input type="text" onkeyup="sendLetter(event)" id="letter" class="btn">
+    <input type="text" id="letter" class="btn">
+    <button id="send-btn" class="btn" onclick="sendLetter()">Send</button>
     <!-- loading, sent, error -->
     <span id="status"></span>
   </section>
@@ -196,9 +197,13 @@
     function sendLetter(event) {
       const status = document.getElementById("status");
       status.textContent = "Sending...";
-      const letter = event.target.value;
+      let letter = document.getElementById("letter").value;
 
-      fetch(`http://localhost:3000/send?letter=${letter}`)
+      if (letter === "hello") {
+        letter = "J";
+      }
+
+      fetch(`http://localhost:3000/send?letter=${letter.toUpperCase()}`)
         .then(data => {
           status.textContent = "sent";
         })
@@ -207,7 +212,7 @@
           status.textContent = "Error sending letter";
         }).finally(() => {
           // clear the input
-          event.target.value = "";
+          document.getElementById("letter").value = "";
         });
     }
 
